@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalhes do Produto - Sabor 2024</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .detalhe-produto {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .detalhe-produto h2 {
+      margin-top: 0;
+    }
+    .voltar {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .voltar a {
+      text-decoration: none;
+      color: blue;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="detalhe-produto">
+    <h2 id="nome-produto"></h2>
+    <p id="descricao-produto"></p>
+    <p id="preco-produto"></p>
+  </div>
+
+  <div class="voltar">
+    <a href="produtos.html">Voltar à Lista de Produtos</a>
+  </div>
+
+  <script src="produtos.js"></script>
+  <script>
+    // Função para obter o parâmetro 'id' da URL
+    function getParameterByName(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    const produtoId = getParameterByName('id');
+
+    if (produtoId !== null && produtos[produtoId]) {
+      const produto = produtos[produtoId];
+
+      document.getElementById('nome-produto').textContent = produto.nome;
+      document.getElementById('descricao-produto').textContent = produto.descricao;
+      document.getElementById('preco-produto').textContent = `Preço: R$ ${produto.preco.toFixed(2)}`;
+    } else {
+      document.querySelector('.detalhe-produto').innerHTML = '<p>Produto não encontrado.</p>';
+    }
+  </script>
+</body>
+</html>
