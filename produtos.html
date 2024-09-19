@@ -21,6 +21,10 @@
       color: blue;
       font-weight: bold;
     }
+    .produto button {
+      margin-top: 10px;
+      margin-right: 5px;
+    }
   </style>
 </head>
 <body>
@@ -28,34 +32,64 @@
   <h1>Produtos Disponíveis</h1>
   <div id="lista-produtos"></div>
 
-  <script src="produtos.js"></script>
   <script>
-    const listaProdutos = document.getElementById('lista-produtos');
+    fetch('http://localhost:3000/produtos')
+      .then(response => response.json())
+      .then(produtos => {
+        const listaProdutos = document.getElementById('lista-produtos');
 
-    produtos.forEach((produto, index) => {
-      const divProduto = document.createElement('div');
-      divProduto.className = 'produto';
+        produtos.forEach(produto => {
+          const divProduto = document.createElement('div');
+          divProduto.className = 'produto';
 
-      const nomeProduto = document.createElement('h3');
-      nomeProduto.textContent = produto.nome;
+          const nomeProduto = document.createElement('h3');
+          nomeProduto.textContent = produto.nome;
 
-      const descricaoProduto = document.createElement('p');
-      descricaoProduto.textContent = produto.descricao;
+          const descricaoProduto = document.createElement('p');
+          descricaoProduto.textContent = produto.descricao;
 
-      const precoProduto = document.createElement('p');
-      precoProduto.textContent = `Preço: R$ ${produto.preco.toFixed(2)}`;
+          const precoProduto = document.createElement('p');
+          precoProduto.textContent = `Preço: R$ ${parseFloat(produto.preco).toFixed(2)}`;
 
-      const linkDetalhes = document.createElement('a');
-      linkDetalhes.href = `detalhe_produto.html?id=${index}`;
-      linkDetalhes.textContent = 'Ver Detalhes';
+          const linkDetalhes = document.createElement('a');
+          linkDetalhes.href = `detalhe_produto.html?id=${produto.id}`;
+          linkDetalhes.textContent = 'Ver Detalhes';
 
-      divProduto.appendChild(nomeProduto);
-      divProduto.appendChild(descricaoProduto);
-      divProduto.appendChild(precoProduto);
-      divProduto.appendChild(linkDetalhes);
+          const botaoAlterar = document.createElement('button');
+          botaoAlterar.textContent = 'Alterar';
+          botaoAlterar.onclick = function() {
+            window.location.href = `alterar.html?id=${produto.id}`;
+          };
 
-      listaProdutos.appendChild(divProduto);
-    });
+          const botaoRemover = document.createElement('button');
+          botaoRemover.textContent = 'Remover';
+          botaoRemover.onclick = function() {
+            if (confirm('Deseja realmente remover este produto?')) {
+              fetch(`http://localhost:3000/produtos/${produto.id}`, { method: 'DELETE' })
+                .then(response => response.json())
+                .then(resultado => {
+                  alert(resultado.mensagem);
+                  location.reload();
+                })
+                .catch(error => {
+                  console.error('Erro ao remover produto:', error);
+                });
+            }
+          };
+
+          divProduto.appendChild(nomeProduto);
+          divProduto.appendChild(descricaoProduto);
+          divProduto.appendChild(precoProduto);
+          divProduto.appendChild(linkDetalhes);
+          divProduto.appendChild(botaoAlterar);
+          divProduto.appendChild(botaoRemover);
+
+          listaProdutos.appendChild(divProduto);
+        });
+      })
+      .catch(error => {
+        console.error('Erro ao buscar produtos:', error);
+      });
   </script>
 </body>
 </html>
