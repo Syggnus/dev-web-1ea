@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Alterar Produto - Sabor 2024</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    form {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      background-color: #f3f3f3;
+      border-radius: 5px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    input[type="submit"] {
+      margin-top: 20px;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      background-color: green;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="form-alterar">
+    <h2>Alterar Produto</h2>
+
+    <input type="hidden" name="id" id="produto-id">
+
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome" required>
+
+    <label for="descricao">Descrição:</label>
+    <textarea id="descricao" name="descricao" required></textarea>
+
+    <label for="preco">Preço:</label>
+    <input type="text" id="preco" name="preco" required>
+
+    <input type="submit" value="Salvar Alterações">
+  </form>
+
+  <script>
+    function getParameterByName(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    const produtoId = getParameterByName('id');
+
+    if (produtoId) {
+      fetch(`http://localhost:3000/produtos/${produtoId}`)
+        .then(response => response.json())
+        .then(produto => {
+          if (produto.erro) {
+            alert(produto.erro);
+          } else {
+            document.getElementById('produto-id').value = produto.id;
+            document.getElementById('nome').value = produto.nome;
+            document.getElementById('descricao').value = produto.descricao;
+            document.getElementById('preco').value = produto.preco;
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao obter produto:', error);
+        });
+    } else {
+      alert('ID do produto não fornecido.');
+    }
+
+    document.getElementById('form-alterar').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const id = document.getElementById('produto-id').value;
+      const nome = document.getElementById('nome').value;
+      const descricao = document.getElementById('descricao').value;
+      const preco = parseFloat(document.getElementById('preco').value);
+
+      fetch(`http://localhost:3000/produtos/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ nome, descricao, preco })
+      })
+      .then(response => response.json())
+      .then(resultado => {
+        alert(resultado.mensagem);
+        window.location.href = 'produtos.html';
+      })
+      .catch(error => {
+        console.error('Erro ao atualizar produto:', error);
+      });
+    });
+  </script>
+</body>
+</html>
