@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Produtos - Sabor 2024</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .produto {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin: 15px;
+      border-radius: 5px;
+    }
+    .produto h3 {
+      margin-top: 0;
+    }
+    .produto a {
+      text-decoration: none;
+      color: blue;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Produtos Disponíveis</h1>
+  <div id="lista-produtos"></div>
+
+  <script src="produtos.js"></script>
+  <script>
+    const listaProdutos = document.getElementById('lista-produtos');
+
+    produtos.forEach((produto, index) => {
+      const divProduto = document.createElement('div');
+      divProduto.className = 'produto';
+
+      const nomeProduto = document.createElement('h3');
+      nomeProduto.textContent = produto.nome;
+
+      const descricaoProduto = document.createElement('p');
+      descricaoProduto.textContent = produto.descricao;
+
+      const precoProduto = document.createElement('p');
+      precoProduto.textContent = `Preço: R$ ${produto.preco.toFixed(2)}`;
+
+      const linkDetalhes = document.createElement('a');
+      linkDetalhes.href = `detalhe_produto.html?id=${index}`;
+      linkDetalhes.textContent = 'Ver Detalhes';
+
+      divProduto.appendChild(nomeProduto);
+      divProduto.appendChild(descricaoProduto);
+      divProduto.appendChild(precoProduto);
+      divProduto.appendChild(linkDetalhes);
+
+      listaProdutos.appendChild(divProduto);
+    });
+  </script>
+</body>
+</html>
